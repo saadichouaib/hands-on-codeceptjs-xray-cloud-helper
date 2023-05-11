@@ -1,0 +1,112 @@
+image: eu.gcr.io/gitlabci-qa:14.17.5.2
+
+variables:
+  PROJECT_NAME: "hands-on-codeceptjs-xray-cloud-helper"
+  FORCE_COLOR: '1'
+
+stages:
+  - init-test
+  - test
+
+.default-tag:
+  tags:
+    - medium
+
+##############################################################
+####                                                      ####
+####                      Template                        ####
+####                                                      ####
+##############################################################
+
+install-codeceptjs:
+  extends: .default-tag
+  stage: init-test
+  before_script:
+    - npm install
+  script:
+    - echo "install-codeceptjs job"
+    - echo "XRAY Import Enabled_ ${XRAY_ENABLED}"
+    - echo "XRAY Import To An Existing Test Execution_ ${XRAY_IMPORT_TO_EXISTING_TEST_EXECUTION}"
+    - echo "XRAY Existing Test Execution Key_ ${XRAY_EXISTING_TEST_EXECUTION_KEY}"
+    - echo "XRAY Import Screenshots When Tests Fail_ ${XRAY_IMPORT_SCREENSHOTS}"
+    - echo "XRAY API Timeout_ ${XRAY_TIMEOUT}"
+  retry: 2
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'schedule'
+      when: always
+    - if: $CI_PIPELINE_SOURCE == 'api'
+      when: always
+    - if: $CI_PIPELINE_SOURCE == 'push'
+      when: manual
+      allow_failure: false
+    - when: always
+  cache:
+    key:
+      files:
+        - ./package.json
+        - ./package-lock.json
+      prefix: $PROJECT_NAME
+    paths:
+      - ./node_modules
+
+.run-codeceptjs:
+  extends: .default-tag
+  stage: test
+  script:
+    - npm run $FEATURE_E2E
+  retry: 2
+  rules:
+    - when: always
+  cache:
+    key:
+      files:
+        - ./package.json
+        - ./package-lock.json
+      prefix: $PROJECT_NAME
+    paths:
+      - ./node_modules
+    policy: pull
+  needs:
+    - install-codeceptjs
+
+##############################################################
+####                                                      ####
+####                   functional-test                    ####
+####                                                      ####
+##############################################################
+
+###### Manual job for feature ######
+all_test_types:
+  extends: .run-codeceptjs
+  variables:
+    FEATURE_E2E: test
+
+.all_test_types_passed:
+  extends: .run-codeceptjs
+  variables:
+    FEATURE_E2E: test-passed
+
+.all_test_types_failed:
+  extends: .run-codeceptjs
+  variables:
+    FEATURE_E2E: test-failed
+
+.manual:
+  extends: .run-codeceptjs
+  variables:
+    FEATURE_E2E: test-manual
+
+.manual_data_driven:
+  extends: .run-codeceptjs
+  variables:
+    FEATURE_E2E: test-manual-data-driven
+
+.cucumber_scenario:
+  extends: .run-codeceptjs
+  variables:
+    FEATURE_E2E: feat-scenario
+
+.cucumber_scenario_outline:
+  extends: .run-codeceptjs
+  variables:
+    FEATURE_E2E: feat-outline

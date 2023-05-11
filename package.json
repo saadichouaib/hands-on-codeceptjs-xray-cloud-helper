@@ -1,0 +1,38 @@
+{
+  "name": "hands-on-codeceptjs-xray-cloud-helper",
+  "version": "1.0.0",
+  "description": "Test project that integrate codeceptjs-xray-cloud-helper",
+  "scripts": {
+    "test": "codeceptjs run --steps",
+    "test-passed": "codeceptjs run --steps --grep '(?=.*@passed)' --tests",
+    "test-failed": "codeceptjs run --steps --grep '(?=.*@failed)' --tests",
+    "test-manual": "codeceptjs run --steps --grep '(?=.*@manual)' --tests",
+    "test-manual-data-driven": "codeceptjs run --steps --grep '(?=.*@data_driven)' --tests",
+    "feat-scenario": "codeceptjs run --steps --grep '(?=.*@nominal_scenario)' --features",
+    "feat-outline": "codeceptjs run --steps --grep '(?=.*@nominal_outline)' --features",
+    "test-generic-passed": "codeceptjs run --steps --grep '(?=.*@generic)(?=.*@passed)' --tests",
+    "test-generic-failed": "codeceptjs run --steps --grep '(?=.*@generic)(?=.*@failed)' --tests",
+    "test-generic-auto-create": "codeceptjs run --steps --grep '(?=.*@generic)(?=.*@auto_create)' --tests",
+    "test-manual-passed": "codeceptjs run --steps --grep '(?=.*@manual)(?=.*@passed)' --tests",
+    "test-manual-failed": "codeceptjs run --steps --grep '(?=.*@manual)(?=.*@failed)' --tests",
+    "test-manual-auto-create": "codeceptjs run --steps --grep '(?=.*@manual)(?=.*@auto_create)' --tests",
+    "test-manual-data-driven-passed": "codeceptjs run --steps --grep '(?=.*@data_driven)(?=.*@passed)' --tests",
+    "test-manual-data-driven-failed": "codeceptjs run --steps --grep '(?=.*@data_driven)(?=.*@failed)' --tests",
+    "test-manual-data-driven-auto-create": "codeceptjs run --steps --grep '(?=.*@data_driven)(?=.*@auto_create)' --tests",
+    "feat-scenario-passed": "codeceptjs run --steps --grep '(?=.*@nominal_scenario)(?=.*@passed)' --features",
+    "feat-scenario-failed": "codeceptjs run --steps --grep '(?=.*@nominal_scenario)(?=.*@failed)' --features",
+    "feat-outline-passed": "codeceptjs run --steps --grep '(?=.*@nominal_outline)(?=.*@passed)' --features",
+    "feat-outline-failed": "codeceptjs run --steps --grep '(?=.*@nominal_outline)(?=.*@failed)' --features"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "codeceptjs": "^3.3.7",
+    "puppeteer": "^12.0.0"
+  },
+  "dependencies": {
+    "codeceptjs-xray-cloud-helper": "^2.0.0",
+    "codeceptjs-chai": "^2.3.3"
+  }
+}

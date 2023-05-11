@@ -1,0 +1,72 @@
+exports.config = {
+  output: "./output",
+  helpers: {
+    REST: {},
+    ChaiWrapper: {
+      require: "codeceptjs-chai",
+    },
+    Puppeteer: {
+      url: "https://developer.hipay.com/",
+      restart: false,
+      waitForNavigation: ["domcontentloaded", "networkidle0"],
+      waitForAction: 500,
+      browser: "chrome",
+      headless: true,
+      show: false,
+      chrome: {
+        args: ["--lang=ja,en-US,en", "--no-sandbox", "--disable-setuid-sandbox", "--window-size=1800,1000"],
+        ignoreHTTPSErrors: true,
+        defaultViewport: {
+          width: 1920,
+          height: 1000,
+        },
+      },
+    },
+  },
+  include: {},
+  mocha: {},
+  bootstrap: null,
+  timeout: null,
+  teardown: null,
+  hooks: [],
+  gherkin: {
+    features: "./features/*.feature",
+    steps: ["./step_definitions/xray_scenario_outline.steps.js", "./step_definitions/xray_scenario.steps.js"],
+  },
+  plugins: {
+    screenshotOnFail: {
+      enabled: true,
+      uniqueScreenshotNames: true,
+    },
+    xrayImport: {
+      require: "codeceptjs-xray-cloud-helper",
+      enabled: process.env.XRAY_ENABLED ? JSON.parse(process.env.XRAY_ENABLED) : true,
+      debug: false,
+      projectKey: "KEY",
+      testExecutionAssigneeUserId: "604b3a41b020eb006",
+      importToExistingTestExecution: process.env.XRAY_IMPORT_TO_EXISTING_TEST_EXECUTION ? JSON.parse(process.env.XRAY_IMPORT_TO_EXISTING_TEST_EXECUTION) : true,
+      existingTestExecutionKey: process.env.XRAY_EXISTING_TEST_EXECUTION_KEY || "KEY-1130",
+      testExecutionPlanKey: "POSDEV-1124",
+      testExecutionVersion: "",
+      testExecutionRevision: "",
+      testExecutionEnvironments: ["QA"],
+      testExecutionSummary: "Execution of automated tests POC",
+      testExecutionDescription: `${process.env.CI_PIPELINE_URL ? process.env.CI_PIPELINE_URL : "Tests Executed on LOCAL"}`,
+      testExecutionSendEvidenceOnFail: process.env.XRAY_IMPORT_SCREENSHOTS ? JSON.parse(process.env.XRAY_IMPORT_SCREENSHOTS) : true,
+      testExecutionCustomFields: [
+        { id: "63c5731047c0ed24ee469f5b", value: process.env.CI_JOB_ID ? process.env.CI_JOB_ID : "local" },
+        { id: "63ca96c415b255e3bee8e26f", value: process.env.CI_PIPELINE_ID ? process.env.CI_PIPELINE_ID : "local" },
+      ],
+      createNewJiraTest: false,
+      timeout: Number(process.env.XRAY_TIMEOUT) || 120000,
+      xrayClientId: process.env.XRAY_CLIENT_ID || "&",
+      xraySecret: process.env.XRAY_CLIENT_SECRET || "&",
+    },
+    commentStep: {
+      enabled: true,
+      registerGlobal: "xray_",
+    },
+  },
+  tests: "./*/*/*_test.js",
+  name: "hands_on_codeceptjs",
+};
